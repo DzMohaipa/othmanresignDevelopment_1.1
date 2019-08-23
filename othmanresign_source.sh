@@ -50,18 +50,21 @@ cp "$MOBILEPROV" $tempextracted"/Payload/$APPLICATION/embedded.mobileprovision"
 
 echo "Resigning "$filename".ipa"
 
+
 find "$tempextracted/Payload/$APPLICATION/libloader" -type f > /tmp/N_directories"$filename".txt 2>/dev/null
 
 find -d $tempextracted \( -name "*.app" -o -name "*.appex" -o -name "*.framework" -o -name "*.dylib" -o -name "CSub" \) >> /tmp/N_directories"$filename".txt
 
 security cms -D -i $tempextracted"/Payload/$APPLICATION/embedded.mobileprovision" >> /tmp/N_entitlements_full"$filename".plist 2>/dev/null
 
-
-
 /usr/libexec/PlistBuddy -x -c 'Print:Entitlements' /tmp/N_entitlements_full"$filename".plist >> /tmp/N_entitlements"$filename".plist
 
+############################## هذا المسار لحل مشكلة الايقونات في الاكس ار ِ############################## //
+/usr/libexec/PlistBuddy -c "delete :CFBundleIcons:CFBundlePrimaryIcon:CFBundleIconName" $tempextracted"/Payload/$APPLICATION/Info.plist"
+############################## // ِ############################## //
+
 ############################## // هذا المسار لحذف الشهاده بعد دمجها ##############################
-rm $tempextracted"/Payload/$APPLICATION/embedded.mobileprovision"
+#rm $tempextracted"/Payload/$APPLICATION/embedded.mobileprovision"
 ############################## // ِ############################## //
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
